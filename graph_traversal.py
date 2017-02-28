@@ -196,6 +196,63 @@ class Graph(object):
 
 graph = Graph()
 
+graph1 = Graph()
+graph1.insert_edge(2, 0, 1) 
+graph1.insert_edge(2, 1, 0)
+
+graph1.insert_edge(3, 0, 2)
+graph1.insert_edge(3, 2, 0)
+
+graph1.insert_edge(3, 0, 3)
+graph1.insert_edge(3, 3, 0)
+
+graph1.insert_edge(4, 1, 2)
+graph1.insert_edge(4, 2, 1) 
+
+graph1.insert_edge(3, 1, 4) 
+graph1.insert_edge(3, 4, 1) 
+
+graph1.insert_edge(5, 2, 3) 
+graph1.insert_edge(5, 3, 2) 
+
+graph1.insert_edge(1, 2, 4)
+graph1.insert_edge(1, 4, 2)
+
+graph1.insert_edge(7, 3, 5)
+graph1.insert_edge(7, 5, 3)
+
+graph1.insert_edge(8, 4, 5) 
+graph1.insert_edge(8, 5, 4)
+
+graph1.insert_edge(9, 5, 6)
+graph1.insert_edge(9, 6, 5)
+
+graph1.set_node_names(('a', # 0
+                       'b', # 1
+                       'c', # 2
+                       'd', # 3
+                       'e', # 4
+                       'f', # 5
+                       'g'))# 6
+
+test = Graph()
+
+test.set_node_names(('A',  #0
+                     'B',  #1
+                     'C',  #2
+                     'D')) #3
+
+test.insert_edge(2, 0,1)
+test.insert_edge(2, 1,0)
+
+test.insert_edge(3, 1,3)
+test.insert_edge(3, 3,1)
+
+test.insert_edge(2, 2,3)
+test.insert_edge(2, 3,2)
+
+test.insert_edge(5, 1,2)
+test.insert_edge(5, 2,1)
 # You do not need to change anything below this line.
 # You only need to implement Graph.dfs_helper and Graph.bfs
 
@@ -256,7 +313,79 @@ graph.insert_edge(9471, 5, 2)   # Sao Paolo <-> London
 # # ['London', 'Shanghai', 'Berlin', 'Sao Paolo', 'Mountain View', 'San Francisco']
 
 
-results = graph.get_adjacency_list()
+adjacency_list = test.get_adjacency_list()
 
-for i in results:
+# for i in adjacency_list:
+#     print(i)
+
+vertices_input = {}
+for i in range(0,len(adjacency_list)):
+    vertices_input[i]=adjacency_list[i]
+
+
+def primsMST(vertices_input):
+    finalMST = []
+
+    vertices = list(vertices_input.keys())   # set of vertices
+
+    keys = []      # list of keys used to pick minimum weight edge
+    keys.append(0)
+
+    mstSet= []      # Holds vertices not yet included in finalMST
+    
+    mstGraph = Graph()
+    for i in range(1,len(vertices)):
+        keys.append(float("inf"))
+
+    minVal = -1
+    while(len(vertices) > len(mstSet)):
+        if(minVal == -1):
+            previous_vertex = vertices[0]
+            vertex = vertices[0]
+            mstSet.append(vertex)
+            adjacent_vertices = vertices_input[vertex]
+            for adjacent_vertex in adjacent_vertices:
+                vertex_index = vertices.index(adjacent_vertex[0])
+                keys[vertex_index] = adjacent_vertex[1]
+            minVal = 0
+        else:
+            vertex = find_minVertex(keys,vertices, mstSet)
+            mstSet.append(vertex)
+
+            mstGraph.insert_edge(keys[vertices.index(vertex)], previous_vertex, vertex)
+            mstGraph.insert_edge(keys[vertices.index(vertex)], vertex, previous_vertex)
+            previous_vertex = vertex
+
+            adjacent_vertices = vertices_input[vertex]
+            for adjacent_vertex in adjacent_vertices:
+                vertex_index = vertices.index(adjacent_vertex[0])
+                if(adjacent_vertex[1] < keys[vertex_index]):
+                    keys[vertex_index] = adjacent_vertex[1]
+
+    mstGraph.set_node_names(('A',  #0
+                             'B',  #1
+                             'C',  #2
+                             'D')) #3
+    print("")
+    results_dict = {}
+    temp = mstGraph.get_adjacency_list()
+    for i in range(0,len(temp)):
+        results_dict[i] = temp[i]
+
+    print("New Adjacency List",results_dict)
+    print("")
+    print("Final Vertices", mstSet)
+
+def find_minVertex(keys, vertices, mstSet):
+    temp = []
+    for i in keys:
+        temp.append(i)
+    for mst_vertex in mstSet:
+        vertex_index = vertices.index(mst_vertex)
+        temp[vertex_index] = float("inf")
+    return temp.index(min(temp))
+
+for i in vertices_input.values():
     print(i)
+primsMST(vertices_input)
+
