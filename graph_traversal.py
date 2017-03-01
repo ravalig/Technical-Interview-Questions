@@ -209,25 +209,6 @@ class Graph(object):
         return [self.node_names[num] for num in self.bfs(start_node_num)]
 
 
-test = Graph()
-
-test.set_node_names(('A',  #0
-                     'B',  #1
-                     'C',  #2
-                     'D')) #3
-
-test.insert_edge(2, 0,1)
-test.insert_edge(2, 1,0)
-
-test.insert_edge(3, 1,3)
-test.insert_edge(3, 3,1)
-
-test.insert_edge(2, 2,3)
-test.insert_edge(2, 3,2)
-
-test.insert_edge(5, 1,2)
-test.insert_edge(5, 2,1)
-
 
 def find_minVertex(keys, vertices, mstSet):
     temp = []
@@ -238,9 +219,32 @@ def find_minVertex(keys, vertices, mstSet):
         temp[vertex_index] = float("inf")
     return temp.index(min(temp))
 
-def primsMST(vertices_input):
-    finalMST = []
 
+def primsMST(vertices_input):
+    vertices_input_keys = []
+    vertices_input_values = []
+    sd = sorted(vertices_input.items())
+    for k,v in sd:
+        vertices_input_keys.append(k)
+        vertices_input_values.append(v)
+
+    str_to_int = {}
+    counter = 0
+    for key in vertices_input_keys:
+        str_to_int[key] = counter
+        counter +=1
+
+    temp = []
+    for i in vertices_input_values:
+        temp_j = []
+        for j in i:
+            j = (str_to_int[j[0]],j[1])
+            temp_j.append(j)
+        temp.append(temp_j)
+
+
+    vertices_input = dict(zip(sorted(str_to_int.values()),temp))
+    
     vertices = list(vertices_input.keys())   # set of vertices
 
     keys = []      # list of keys used to pick minimum weight edge
@@ -277,20 +281,13 @@ def primsMST(vertices_input):
                 if(adjacent_vertex[1] < keys[vertex_index]):
                     keys[vertex_index] = adjacent_vertex[1]
 
-    mstGraph.set_node_names(('A',  #0
-                             'B',  #1
-                             'C',  #2
-                             'D')) #3
-    print("")
+    mstGraph.set_node_names((i for i in sorted(str_to_int)))
+
     results_dict = {}
     temp = mstGraph.get_adjacency_list()
     for i in range(0,len(temp)):
         results_dict[i] = temp[i]
 
-    print("New Adjacency List",results_dict)
-    print("")
-    print("Final Vertices", mstSet)
-    print("")
     names = mstGraph.get_adjacency_list_names()
     x_list = []
     for x in names:
@@ -299,18 +296,15 @@ def primsMST(vertices_input):
             y_list.append(y) 
         x_list.append(y_list)
 
-    names_dict = dict(zip(test.node_names, x_list))
+    names_dict = dict(zip(sorted(str_to_int), x_list))
 
-    print(names_dict)
-
-
+    return names_dict
 
 
-
-adjacency_list = test.get_adjacency_list()
-
-vertices_input = {}
-for i in range(0,len(adjacency_list)):
-    vertices_input[i]=adjacency_list[i]
-primsMST(vertices_input)
+input1 = {'A':[('B',2)], 
+          'B':[('A',2),('C',5), ('D',3)],
+          'C':[('B',5),('D',2)],
+          'D':[('B',3),('C',2)]
+         }
+print(primsMST(input1))
 
