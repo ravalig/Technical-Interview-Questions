@@ -220,7 +220,7 @@ def find_minVertex(keys, vertices, mstSet):
     return temp.index(min(temp))
 
 
-def primsMST(vertices_input):
+def question3(vertices_input):
     vertices_input_keys = []
     vertices_input_values = []
     sd = sorted(vertices_input.items())
@@ -301,10 +301,10 @@ def primsMST(vertices_input):
     return names_dict
 
 
-input1 = {'A':[('B',2)], 
+G = {'A':[('B',2)], 
           'B':[('A',2),('C',5), ('D',3)],
           'C':[('B',5),('D',2)],
           'D':[('B',3),('C',2)]
          }
-print(primsMST(input1))
+print(question3(G))
 
