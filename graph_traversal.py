@@ -13,13 +13,6 @@ class Edge(object):
         self.node_from = node_from
         self.node_to = node_to
 
-# You only need to change code with docs strings that have TODO.
-# Specifically: Graph.dfs_helper and Graph.bfs
-# New methods have been added to associate node numbers with names
-# Specifically: Graph.set_node_names
-# and the methods ending in "_names" which will print names instead
-# of node numbers
-
 class Graph(object):
     def __init__(self, nodes=None, edges=None):
         self.nodes = nodes or []

@@ -1,7 +1,7 @@
 class Node(object):
-  def __init__(self, data=None):
-    self.data = data
-    self.next = None
+	def __init__(self, data=None):
+		self.data = data
+		self.next = None
 
 class LinkedList(object):
 	def __init__(self, new_element):
@@ -37,5 +37,5 @@ llist.append(Node(12))
 llist.append(Node(13))
 llist.append(Node(14))
 
-result = question5(llist.head, 5)
+result = question5(llist.head, 3)
 print(result.data)
