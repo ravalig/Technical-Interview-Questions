@@ -47,7 +47,7 @@ Space complexity: O(3h) where h is the height of the tree
 
 Question 5
 
-Maintained two pointers – reference pointer and main pointer. Initialized both pointers to head. Start incrementing the main pointer until it reaches end. When the main pointer crosses mth element from the start, start incrementing reference pointer. At the end, main pointer will be referencing the end element and reference pointer will be pointing the mth element from the end. Return reference pointer.
+Maintained two pointers – temp pointer and current pointer. Initialized both pointers to head. Start incrementing the current pointer until it reaches end. When the current pointer crosses mth element from the start, start incrementing temp pointer. At the end, current pointer will be referencing the end element and temp pointer will be pointing the mth element from the end. Return temp pointer.
 
 Time complexity: O(n) where n is the number of nodes
 Space complexity: O(1)

@@ -67,37 +67,6 @@ def question2(test):
 	return result
 # --------------------------------------------------------------------------
 
-class Element(object):
-	def __init__(self,data=None):
-		self.data = data
-		self.next = None
-class LinkedList(object):
-	def __init__(self, new_element):
-		self.head = new_element
-
-	def append(self, new_element):
-		current = self.head
-		if(self.head):
-			while current.next:
-				current = current.next
-			current.next = new_element
-		else:
-			self.head = new_element
-
-def question5(ll, m):
-	current = ll
-	counter = 1
-	temp = ll
-
-	while(current):
-		if(counter > m):			
-			temp = temp.next
-			
-		current = current.next
-		counter += 1
-	return temp
-
-# --------------------------------------------------------------------------
 
 import pprint
 pp = pprint.PrettyPrinter(indent=2)
@@ -368,12 +337,58 @@ def question4(T, r, n1, n2):
 
 # --------------------------------------------------------------------------
 
+class Element(object):
+	def __init__(self,data=None):
+		self.data = data
+		self.next = None
+class LinkedList(object):
+	def __init__(self, new_element):
+		self.head = new_element
 
+	def append(self, new_element):
+		current = self.head
+		if(self.head):
+			while current.next:
+				current = current.next
+			current.next = new_element
+		else:
+			self.head = new_element
+
+def question5(ll, m):
+	if(ll == None or m == None or m <= 0):
+		print("Invalid  Input")
+		return None
+	else:
+
+		current = ll
+		counter = 1
+		temp = ll
+
+		while(current):
+			if(counter > m):			
+				temp = temp.next
+			
+			current = current.next
+			counter += 1
+		return temp
+
+# --------------------------------------------------------------------------
+
+print("---------QUESTION 1---------")
 
 
 print(question1("udacity", "Da"))
+print(question1("udacity", "ra"))
+print(question1("udacity", "udacity"))
+
+print("---------QUESTION 2---------")
 
 print(question2("nitin"))
+print(question2("venu"))
+print(question2("12345"))
+
+print("---------QUESTION 3---------")
+
 
 G = {'A':[('B',2)], 
           'B':[('A',2),('C',5), ('D',3)],
@@ -381,6 +396,9 @@ G = {'A':[('B',2)],
           'D':[('B',3),('C',2)]
          }
 print(question3(G))
+
+print("---------QUESTION 4---------")
+
 
 T = [[0, 1, 0, 0, 0],
      [0, 0, 0, 0, 0],
@@ -390,6 +408,7 @@ T = [[0, 1, 0, 0, 0],
 
 print(question4(T, 3, 0, 1))
 
+print("---------QUESTION 5---------")
 
 llist = LinkedList(Element(10))
 llist.append(Element(11))
@@ -397,4 +416,9 @@ llist.append(Element(12))
 llist.append(Element(13))
 llist.append(Element(14))
 
-print(question5(llist.head, 5).data)
+if question5(llist.head, 5):
+	print(question5(llist.head, 5).data)
+if question5(llist.head, 0):
+	print(question5(llist.head, 0).data)
+if question5(llist.head, None):
+	print(question5(llist.head, None).data)
