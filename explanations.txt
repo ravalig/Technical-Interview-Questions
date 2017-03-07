@@ -14,3 +14,40 @@ Auxiliary Space: O(1)
 
 Question 3
 
+Prims Algorithm was implemented to calculate Minimum Spanning Tree for a given graph input.
+The input graph was transformed to simplify the algorithm implement. Created a dictionary that maps each vertex to an integer stating from 0. Transformed the input into a format where every vertex is represented by an integer value.  The new input is used in the algorithm.
+
+The following 3 variables are maintained throughout the algorithm:
+	Keys: Holds minimum weight of the edge. Initialize weight of 0th element to zero, and all other weights to infinite.
+	Mstset: Holds indexes of vertices that are in minimum spanning tree
+	MstGraph: A new graph is built based on vertices in mstset only. Any edge that is not part of minimum spanning tree was ignored.
+
+Iterate until Mstset has all vertices and perform the following actions
+	1.	Find the minimum index of keys array that has least value and add that index to Mstset
+	2.	Add an edge for last two vertices added to Mstset
+	3.	Iterate through adjacent vertices
+		a.	Update weight in keys array if value in key is more than weight in adjustment list
+
+Adjacency list was created from the graph MstGraph. The adjacency list will consists of index of vertices. So, the adjacency list will be modified to replace vertex indexes with vertex name supplied as part of input. The modified adjacency list will be returned.
+
+Time complexity: O(VE) where V is number of vertices and E is number of edges
+Space Complexity: O(3V) where V is the number of vertices
+
+Question 4
+
+From the given adjacency matrix I built a Binary Search Tree.
+
+Implemented the alogrithm in the following way:
+	1) Find path from root to n1 and store it in a list.
+	2) Find path from root to n2 and store it in another list.
+	3) Traverse both paths till the values in lists are same. Return the common element just before the mismatch.
+
+Time complexity: O(n) where n is the number of nodes
+Space complexity: O(3h) where h is the height of the tree
+
+Question 5
+
+Maintained two pointers – reference pointer and main pointer. Initialized both pointers to head. Start incrementing the main pointer until it reaches end. When the main pointer crosses mth element from the start, start incrementing reference pointer. At the end, main pointer will be referencing the end element and reference pointer will be pointing the mth element from the end. Return reference pointer.
+
+Time complexity: O(n) where n is the number of nodes
+Space complexity: O(1)
