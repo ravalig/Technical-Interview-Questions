@@ -15,36 +15,26 @@ Space complexity: O(1)
 
 Question 3
 
-Prims Algorithm was implemented to calculate Minimum Spanning Tree for a given graph input.
-The input graph was transformed to simplify the algorithm implement. Created a dictionary that maps each vertex to an integer stating from 0. Transformed the input into a format where every vertex is represented by an integer value.  The new input is used in the algorithm.
+Kruskal’s Algorithm was implemented to calculate Minimum Spanning Tree for a given graph input.
 
-The following 3 variables are maintained throughout the algorithm:
-	Keys: Holds minimum weight of the edge. Initialize weight of 0th element to zero, and all other weights to infinite.
-	Mstset: Holds indexes of vertices that are in minimum spanning tree
-	MstGraph: A new graph is built based on vertices in mstset only. Any edge that is not part of minimum spanning tree was ignored.
+The adjacency list that was passed as input is used to build two lists: one for list of keys and one for edges. Next, edges are sorted in ascending order of weight. 
 
-Iterate until Mstset has all vertices and perform the following actions
-	1.	Find the minimum index of keys array that has least value and add that index to Mstset
-	2.	Add an edge for last two vertices added to Mstset
-	3.	Iterate through adjacent vertices
-		a.	Update weight in keys array if value in key is more than weight in adjustment list
+Step 1: Pick the smallest edge, then Check if it forms a cycle with the spanning tree 
+formed so far. If cycle is not formed, include this edge in spanning tree. Else, discard it.  
 
-Adjacency list was created from the graph MstGraph. The adjacency list will consists of index of vertices. So, the adjacency list will be modified to replace vertex indexes with vertex name supplied as part of input. The modified adjacency list will be returned.
+Step2:. Repeat step#1 until there are (V-1) edges in the spanning tree.
 
-Time complexity: O(VE) where V is number of vertices and E is number of edges
-Space Complexity: O(3) where V is the number of vertices
+Time complexity: O(ElogV) where V is number of vertices and E is number of edges
+Space Complexity: O(1)
 
 Question 4
 
-From the given adjacency matrix I built a Binary Search Tree.
+From the given adjacency matrix I built a Binary Search Tree. Recursion was used to improve efficiency of algorithm. 
 
-Implemented the alogrithm in the following way:
-	1) Find path from root to n1 and store it in a list.
-	2) Find path from root to n2 and store it in another list.
-	3) Traverse both paths till the values in lists are same. Return the common element just before the mismatch.
+LCAHelper is the recursive method. This method checks on edge cases, then calls itself with left node as root and right node as root. Results of recursive calls stored in leftlca and right lca. if leftlca and right lca are not null, function returns root(function parameter, need not be root of the tree) otherwise returns non-null value among leftlca, rightlca
 
 Time complexity: O(n) where n is the number of nodes
-Space complexity: O(3h) where h is the height of the tree
+Space complexity: O(1)
 
 Question 5
 

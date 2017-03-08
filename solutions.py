@@ -67,209 +67,106 @@ def question2(test):
 	return result
 # --------------------------------------------------------------------------
 
+parent = dict()
+rank = dict()
 
-import pprint
-pp = pprint.PrettyPrinter(indent=2)
+def make_set(vertice):
+    parent[vertice] = vertice
+    rank[vertice] = 0
 
-class Node(object):
-    def __init__(self, value):
-        self.value = value
-        self.edges = []
-        self.visited = False
+def find(vertice):
+    if parent[vertice] != vertice:
+        parent[vertice] = find(parent[vertice])
+    return parent[vertice]
 
-class Edge(object):
-    def __init__(self, value, node_from, node_to):
-        self.value = value
-        self.node_from = node_from
-        self.node_to = node_to
+def union(vertice1, vertice2):
+    root1 = find(vertice1)
+    root2 = find(vertice2)
+    if root1 != root2:
+        if rank[root1] > rank[root2]:
+            parent[root2] = root1
+        else:
+            parent[root1] = root2
+            if rank[root1] == rank[root2]: rank[root2] += 1
 
-class Graph(object):
-    def __init__(self, nodes=None, edges=None):
-        self.nodes = nodes or []
-        self.edges = edges or []
-        self.node_names = []
-        self._node_map = {}
+def tranformGraph(G):
+    '''
+        Transforms the graph G which is represented as Adjacency list into a
+        dictionary of vertices and edges
+    '''
+    vertices = list(G.keys())
+    vertices.sort()
 
-    def set_node_names(self, names):
-        """The Nth name in names should correspond to node number N.
-        Node numbers are 0 based (starting at 0).
-        """
-        self.node_names = list(names)
+    edges = []
 
-    def insert_node(self, new_node_val):
-        "Insert a new node with value new_node_val"
-        new_node = Node(new_node_val)
-        self.nodes.append(new_node)
-        self._node_map[new_node_val] = new_node
-        return new_node
+    for k,v in G.items():
+        node1 = k
+        for vv in v:
+            weight = vv[1]
+            node2 = vv[0]
+            temp = [weight, node1, node2]
+            if(len(edges) != 0):
+                duplicate=False
+                for e in edges:
+                    eList = [e[0], e[1], e[2]]
+                    if(temp[0] in eList and temp[1] in eList and temp[2] in eList):
+                        duplicate = True
+                if(duplicate == False):
+                    edges.append((weight, node1, node2))
+            else:
+                edges.append((weight, node1, node2))
 
-    def insert_edge(self, new_edge_val, node_from_val, node_to_val):
-        "Insert a new edge, creating new nodes if necessary"
-        nodes = {node_from_val: None, node_to_val: None}
-        for node in self.nodes:
-            if node.value in nodes:
-                nodes[node.value] = node
-                if all(nodes.values()):
-                    break
-        for node_val in nodes:
-            nodes[node_val] = nodes[node_val] or self.insert_node(node_val)
-        node_from = nodes[node_from_val]
-        node_to = nodes[node_to_val]
-        new_edge = Edge(new_edge_val, node_from, node_to)
-        node_from.edges.append(new_edge)
-        node_to.edges.append(new_edge)
-        self.edges.append(new_edge)
+    graph = {'vertices': vertices,
+             'edges': set(edges)
+            }
 
-    def get_adjacency_list(self):
-        """Return a list of lists.
-        The indecies of the outer list represent "from" nodes.
-        Each section in the list will store a list
-        of tuples that looks like this:
-        (To Node, Edge Value)"""
-        max_index = self.find_max_index()
-        adjacency_list = [[] for _ in range(max_index)]
-        for edg in self.edges:
-            from_value, to_value = edg.node_from.value, edg.node_to.value
-            adjacency_list[from_value].append((to_value, edg.value))
-        return [a or None for a in adjacency_list] # replace []'s with None
+    return graph
 
 
-    def get_adjacency_list_names(self):
-        
-        adjacency_list = self.get_adjacency_list()
+def getAdjacencyList(mst):
+    '''
+        This function returns a minimum spanning tree in adjacency list format
+    '''
+    mstAL= {}
 
-        def convert_to_names(pair, graph=self):
-            node_number, value = pair
-            return (graph.node_names[node_number], value)
+    for i in mst:
+        for x in range(1,3):
+            if(x == 1):
+                y = 2
+            elif(x == 2):
+                y = 1 
 
-        def map_conversion(adjacency_list_for_node):
-            if adjacency_list_for_node is None:
-                return None
-            return map(convert_to_names, adjacency_list_for_node)
-
-        return [map_conversion(adjacency_list_for_node)
-                for adjacency_list_for_node in adjacency_list]
-
-    def find_max_index(self):
-        """Return the highest found node number
-        Or the length of the node names if set with set_node_names()."""
-        if len(self.node_names) > 0:
-            return len(self.node_names)
-        max_index = -1
-        if len(self.nodes):
-            for node in self.nodes:
-                if node.value > max_index:
-                    max_index = node.value
-        return max_index
-
-def find_minVertex(keys, vertices, mstSet):
-    temp = []
-    for i in keys:
-        temp.append(i)
-    for mst_vertex in mstSet:
-        vertex_index = vertices.index(mst_vertex)
-        temp[vertex_index] = float("inf")
-    return temp.index(min(temp))
-
-def getInputKeys(vertices_input):
-	vertices_input_keys = []
-	sd = sorted(vertices_input.items())
-	for k,v in sd:
-		vertices_input_keys.append(k)
-	return vertices_input_keys
-
-def getInputValues(vertices_input):
-    vertices_input_values = []
-    sd = sorted(vertices_input.items())
-    for k,v in sd:
-    	vertices_input_values.append(v)
-    return vertices_input_values
-
-def question3(vertices_input):
-	if vertices_input != None:
-
-		if None in vertices_input.keys():
-			error = "Invalid Input"
-			return error
-
-		vertices_input_keys = getInputKeys(vertices_input)
-		vertices_input_values = getInputValues(vertices_input)
-
-		str_to_int = {}
-		counter = 0
-		for key in vertices_input_keys:
-			str_to_int[key] = counter
-			counter +=1
-
-		temp = []
-		for i in vertices_input_values:
-			temp_j = []
-			for j in i:
-				j = (str_to_int[j[0]],j[1])
-				temp_j.append(j)
-			temp.append(temp_j)
+            if(i[x] in mstAL.keys()):
+                mstAL[i[x]].append((i[y], i[0]))
+            else:
+                mstAL[i[x]] = []
+                mstAL[i[x]].append((i[y], i[0]))
+    return mstAL
 
 
-		vertices_input = dict(zip(sorted(str_to_int.values()),temp))
-    
-		vertices = list(vertices_input.keys())   # set of vertices
+def question3(inputGraph):
+    if(inputGraph != None):
+        if None in inputGraph.keys():
+            error = "Invalid Input"
+            return error
 
-		keys = []      # list of keys used to pick minimum weight edge
-		keys.append(0)
+        graph = tranformGraph(inputGraph)
+        for vertice in graph['vertices']:
+            make_set(vertice)
 
-		mstSet= []      # Holds vertices not yet included in finalMST
-    
-		mstGraph = Graph()
-		for i in range(1,len(vertices)):
-			keys.append(float("inf"))
-
-		minVal = -1
-		while(len(vertices) > len(mstSet)):
-			if(minVal == -1):
-				previous_vertex = vertices[0]
-				vertex = vertices[0]
-				mstSet.append(vertex)
-				adjacent_vertices = vertices_input[vertex]
-				for adjacent_vertex in adjacent_vertices:
-					vertex_index = vertices.index(adjacent_vertex[0])
-					keys[vertex_index] = adjacent_vertex[1]
-				minVal = 0
-			else:
-				vertex = find_minVertex(keys,vertices, mstSet)
-				mstSet.append(vertex)
-
-				mstGraph.insert_edge(keys[vertices.index(vertex)], previous_vertex, vertex)
-				mstGraph.insert_edge(keys[vertices.index(vertex)], vertex, previous_vertex)
-				previous_vertex = vertex
-
-				adjacent_vertices = vertices_input[vertex]
-				for adjacent_vertex in adjacent_vertices:
-					vertex_index = vertices.index(adjacent_vertex[0])
-					if(adjacent_vertex[1] < keys[vertex_index]):
-						keys[vertex_index] = adjacent_vertex[1]
-
-		mstGraph.set_node_names((i for i in sorted(str_to_int)))
-
-		results_dict = {}
-		temp = mstGraph.get_adjacency_list()
-		for i in range(0,len(temp)):
-			results_dict[i] = temp[i]
-
-		names = mstGraph.get_adjacency_list_names()
-		x_list = []
-		for x in names:
-			y_list =[]
-			for y in x:
-				y_list.append(y) 
-			x_list.append(y_list)
-
-		names_dict = dict(zip(sorted(str_to_int), x_list))
-
-		return names_dict
-
-	else:
-		error = "Invalid Input"
-		return error
+        minimum_spanning_tree = set()
+        edges = list(graph['edges'])
+        edges.sort()
+        for edge in edges:
+            weight, vertice1, vertice2 = edge
+            if find(vertice1) != find(vertice2):
+                union(vertice1, vertice2)
+                minimum_spanning_tree.add(edge)
+        mstAL = getAdjacencyList(minimum_spanning_tree)
+        return mstAL
+    else:
+        error = "Invalid Input"
+        return error
 
 # --------------------------------------------------------------------------
 
@@ -301,27 +198,27 @@ class BST(object):
             else:
                 current.left = Node_BST(new_val)
 
-    def search(self, find_val):
-    	self.search_path = []
-    	return self.search_helper(self.root, find_val)
+def LCAHelper(root, n1, n2):
+	if(root == None):
+		error = "Invalid Input"
+		return None
 
-    def search_helper(self, current, find_val):
-        if current:
-            if current.value == find_val:
-            	self.search_path.append(current.value)
-            	return True
-            elif current.value < find_val:
-            	self.search_path.append(current.value)
-            	return self.search_helper(current.right, find_val)
-            else:
-            	self.search_path.append(current.value)
-            	return self.search_helper(current.left, find_val)
-        return False
+	if root.value == n1 or root.value == n2:
+		return root
+
+	left_lca = LCAHelper(root.left, n1, n2) 
+	right_lca = LCAHelper(root.right, n1, n2)
+
+	if left_lca and right_lca:
+		return root 
+
+	return left_lca if left_lca is not None else right_lca
 
 def question4(T, r, n1, n2):
 	if(T == None or n1 >= len(T) or n2 >= len(T)):
-		error = "Invalid input"
+		error = "Invalid Input"
 		return error
+
 	NotTraversed = deque([r])
 	while(NotTraversed):
 		pos = NotTraversed.popleft()
@@ -333,19 +230,9 @@ def question4(T, r, n1, n2):
 		else:
 			tree.insert(pos)
 
-	if(tree.search(n1)):
-		n1_path = tree.search_path
-
-	if(tree.search(n2)):
-		n2_path = tree.search_path
-
-	min_ancestor = None
-	for i in range(0,min(len(n1_path), len(n2_path))):
-		if n1_path[i] == n2_path[i]:
-			min_ancestor = n1_path[i]
-		else:
-			return min_ancestor
-	return min_ancestor
+	temp = LCAHelper(tree.root, n1, n2)
+	if temp:
+		return temp.value
 
 
 # --------------------------------------------------------------------------
