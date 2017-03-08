@@ -2,6 +2,7 @@ Question 1
 
 For given target string, I am creating a dictionary to map each letter in the string to number of occurences for that letter. Then repetitively from start to end of the source string, I am taking a slice from the source string of length equals to target string. I created temporary dictionary for the slice I am currently working on. Temporary dictionary stores the number of occurrences for each letter in the slice. So if the dictionary I created for target string matches with the temporary string the function return true. So after traversing the complete string if none of the dictionaries matches with target dictionary the function returns false. 
 Time complexity:  O(nm), where n is the length of the source string and m is the length of the target string
+Space Complexity: O(2)
 
 
 Question 2
@@ -10,7 +11,7 @@ For this algorithm I am generating all even length and odd length palindromes. T
 To generate odd length palindrome I am fixing a centre and then expand in both directions for longer palindromes.
 To generate even length palindrome I am fix two centres ( low and high ) and then expand in both directions for longer palindromes.
 Time complexity: O(n^2) where n is the length of input string.
-Auxiliary Space: O(1)
+Space complexity: O(1)
 
 Question 3
 
@@ -31,7 +32,7 @@ Iterate until Mstset has all vertices and perform the following actions
 Adjacency list was created from the graph MstGraph. The adjacency list will consists of index of vertices. So, the adjacency list will be modified to replace vertex indexes with vertex name supplied as part of input. The modified adjacency list will be returned.
 
 Time complexity: O(VE) where V is number of vertices and E is number of edges
-Space Complexity: O(3V) where V is the number of vertices
+Space Complexity: O(3) where V is the number of vertices
 
 Question 4
 

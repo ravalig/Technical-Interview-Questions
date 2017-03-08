@@ -186,80 +186,90 @@ def getInputValues(vertices_input):
     return vertices_input_values
 
 def question3(vertices_input):
-    vertices_input_keys = getInputKeys(vertices_input)
-    vertices_input_values = getInputValues(vertices_input)
+	if vertices_input != None:
+
+		if None in vertices_input.keys():
+			error = "Invalid Input"
+			return error
+
+		vertices_input_keys = getInputKeys(vertices_input)
+		vertices_input_values = getInputValues(vertices_input)
+
+		str_to_int = {}
+		counter = 0
+		for key in vertices_input_keys:
+			str_to_int[key] = counter
+			counter +=1
+
+		temp = []
+		for i in vertices_input_values:
+			temp_j = []
+			for j in i:
+				j = (str_to_int[j[0]],j[1])
+				temp_j.append(j)
+			temp.append(temp_j)
+
+
+		vertices_input = dict(zip(sorted(str_to_int.values()),temp))
     
-    str_to_int = {}
-    counter = 0
-    for key in vertices_input_keys:
-        str_to_int[key] = counter
-        counter +=1
+		vertices = list(vertices_input.keys())   # set of vertices
 
-    temp = []
-    for i in vertices_input_values:
-        temp_j = []
-        for j in i:
-            j = (str_to_int[j[0]],j[1])
-            temp_j.append(j)
-        temp.append(temp_j)
+		keys = []      # list of keys used to pick minimum weight edge
+		keys.append(0)
 
-
-    vertices_input = dict(zip(sorted(str_to_int.values()),temp))
+		mstSet= []      # Holds vertices not yet included in finalMST
     
-    vertices = list(vertices_input.keys())   # set of vertices
+		mstGraph = Graph()
+		for i in range(1,len(vertices)):
+			keys.append(float("inf"))
 
-    keys = []      # list of keys used to pick minimum weight edge
-    keys.append(0)
+		minVal = -1
+		while(len(vertices) > len(mstSet)):
+			if(minVal == -1):
+				previous_vertex = vertices[0]
+				vertex = vertices[0]
+				mstSet.append(vertex)
+				adjacent_vertices = vertices_input[vertex]
+				for adjacent_vertex in adjacent_vertices:
+					vertex_index = vertices.index(adjacent_vertex[0])
+					keys[vertex_index] = adjacent_vertex[1]
+				minVal = 0
+			else:
+				vertex = find_minVertex(keys,vertices, mstSet)
+				mstSet.append(vertex)
 
-    mstSet= []      # Holds vertices not yet included in finalMST
-    
-    mstGraph = Graph()
-    for i in range(1,len(vertices)):
-        keys.append(float("inf"))
+				mstGraph.insert_edge(keys[vertices.index(vertex)], previous_vertex, vertex)
+				mstGraph.insert_edge(keys[vertices.index(vertex)], vertex, previous_vertex)
+				previous_vertex = vertex
 
-    minVal = -1
-    while(len(vertices) > len(mstSet)):
-        if(minVal == -1):
-            previous_vertex = vertices[0]
-            vertex = vertices[0]
-            mstSet.append(vertex)
-            adjacent_vertices = vertices_input[vertex]
-            for adjacent_vertex in adjacent_vertices:
-                vertex_index = vertices.index(adjacent_vertex[0])
-                keys[vertex_index] = adjacent_vertex[1]
-            minVal = 0
-        else:
-            vertex = find_minVertex(keys,vertices, mstSet)
-            mstSet.append(vertex)
+				adjacent_vertices = vertices_input[vertex]
+				for adjacent_vertex in adjacent_vertices:
+					vertex_index = vertices.index(adjacent_vertex[0])
+					if(adjacent_vertex[1] < keys[vertex_index]):
+						keys[vertex_index] = adjacent_vertex[1]
 
-            mstGraph.insert_edge(keys[vertices.index(vertex)], previous_vertex, vertex)
-            mstGraph.insert_edge(keys[vertices.index(vertex)], vertex, previous_vertex)
-            previous_vertex = vertex
+		mstGraph.set_node_names((i for i in sorted(str_to_int)))
 
-            adjacent_vertices = vertices_input[vertex]
-            for adjacent_vertex in adjacent_vertices:
-                vertex_index = vertices.index(adjacent_vertex[0])
-                if(adjacent_vertex[1] < keys[vertex_index]):
-                    keys[vertex_index] = adjacent_vertex[1]
+		results_dict = {}
+		temp = mstGraph.get_adjacency_list()
+		for i in range(0,len(temp)):
+			results_dict[i] = temp[i]
 
-    mstGraph.set_node_names((i for i in sorted(str_to_int)))
+		names = mstGraph.get_adjacency_list_names()
+		x_list = []
+		for x in names:
+			y_list =[]
+			for y in x:
+				y_list.append(y) 
+			x_list.append(y_list)
 
-    results_dict = {}
-    temp = mstGraph.get_adjacency_list()
-    for i in range(0,len(temp)):
-        results_dict[i] = temp[i]
+		names_dict = dict(zip(sorted(str_to_int), x_list))
 
-    names = mstGraph.get_adjacency_list_names()
-    x_list = []
-    for x in names:
-        y_list =[]
-        for y in x:
-            y_list.append(y) 
-        x_list.append(y_list)
+		return names_dict
 
-    names_dict = dict(zip(sorted(str_to_int), x_list))
-
-    return names_dict
+	else:
+		error = "Invalid Input"
+		return error
 
 # --------------------------------------------------------------------------
 
@@ -309,6 +319,9 @@ class BST(object):
         return False
 
 def question4(T, r, n1, n2):
+	if(T == None or n1 >= len(T) or n2 >= len(T)):
+		error = "Invalid input"
+		return error
 	NotTraversed = deque([r])
 	while(NotTraversed):
 		pos = NotTraversed.popleft()
@@ -378,14 +391,20 @@ print("---------QUESTION 1---------")
 
 
 print(question1("udacity", "Da"))
+# Expected output : True
 print(question1("udacity", "ra"))
+# Expected output : False
 print(question1("udacity", "udacity"))
+# Expected output : True
 
 print("---------QUESTION 2---------")
 
 print(question2("nitin"))
+# Expected output : nitin
 print(question2("venu"))
+# Expected output : v
 print(question2("12345"))
+# Expected output : 1
 
 print("---------QUESTION 3---------")
 
@@ -395,7 +414,19 @@ G = {'A':[('B',2)],
           'C':[('B',5),('D',2)],
           'D':[('B',3),('C',2)]
          }
+
+G1 = {'A':[('B',2)], 
+          'B':[('A',2),('C',5), ('D',3)],
+          None:[('B',5),('D',2)],
+          'D':[('B',3),('C',2)]
+         }
 print(question3(G))
+# Expected output : {'A': [('B', 2)], 'D': [('B', 3), ('C', 2)], 'C': [('D', 2)], 'B': [('A', 2), ('D', 3)]}
+print(question3(G1))
+# Expected output : Invalid Input
+print(question3(None))
+# Expected output : Invalid Input
+
 
 print("---------QUESTION 4---------")
 
@@ -407,6 +438,11 @@ T = [[0, 1, 0, 0, 0],
      [0, 0, 0, 0, 0]]
 
 print(question4(T, 3, 0, 1))
+# Expected output :  0
+print(question4(None, 3, 0, 1))
+# Expected output :  Invalid Input
+print(question4(T, 3, 5, 1))
+# Expected output :  Invalid Input
 
 print("---------QUESTION 5---------")
 
@@ -418,7 +454,10 @@ llist.append(Element(14))
 
 if question5(llist.head, 5):
 	print(question5(llist.head, 5).data)
-if question5(llist.head, 0):
-	print(question5(llist.head, 0).data)
+	# Expected output :  10
+if question5(llist.head, -1):
+	print(question5(llist.head, -1).data)
+	# Expected output : Invalid Input
 if question5(llist.head, None):
 	print(question5(llist.head, None).data)
+	# Expected output :  Invalid Input
