@@ -1,0 +1,1 @@
+This repository contains multiple programs solving different interview questions using datastructures. All of these are implemented in Python.
