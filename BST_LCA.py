@@ -26,24 +26,27 @@ class BST(object):
             else:
                 current.left = Node_BST(new_val)
 
-    def search(self, find_val):
-    	self.search_path = []
-    	return self.search_helper(self.root, find_val)
+def LCAHelper(root, n1, n2):
+	if(root == None):
+		error = "Invalid Input"
+		return None
 
-    def search_helper(self, current, find_val):
-        if current:
-            if current.value == find_val:
-            	self.search_path.append(current.value)
-            	return True
-            elif current.value < find_val:
-            	self.search_path.append(current.value)
-            	return self.search_helper(current.right, find_val)
-            else:
-            	self.search_path.append(current.value)
-            	return self.search_helper(current.left, find_val)
-        return False
+	if root.value == n1 or root.value == n2:
+		return root
+
+	left_lca = LCAHelper(root.left, n1, n2) 
+	right_lca = LCAHelper(root.right, n1, n2)
+
+	if left_lca and right_lca:
+		return root 
+
+	return left_lca if left_lca is not None else right_lca
 
 def question4(T, r, n1, n2):
+	if(T == None):
+		error = "Invalid Input"
+		return error
+
 	NotTraversed = deque([r])
 	while(NotTraversed):
 		pos = NotTraversed.popleft()
@@ -55,22 +58,10 @@ def question4(T, r, n1, n2):
 		else:
 			tree.insert(pos)
 
-	if(tree.search(n1)):
-		n1_path = tree.search_path
+	temp = LCAHelper(tree.root, n1, n2)
+	if temp:
+		return temp.value
 
-	if(tree.search(n2)):
-		n2_path = tree.search_path
-
-	print(n1_path)
-	print(n2_path)
-
-	min_ancestor = None
-	for i in range(0,min(len(n1_path), len(n2_path))):
-		if n1_path[i] == n2_path[i]:
-			min_ancestor = n1_path[i]
-		else:
-			return min_ancestor
-	return min_ancestor
 
 
 T = [[0, 1, 0, 0, 0],
@@ -79,4 +70,4 @@ T = [[0, 1, 0, 0, 0],
      [1, 0, 0, 0, 1],
      [0, 0, 0, 0, 0]]
 
-print(question4(T, 3, 0, 1))
+print(question4(T, 3, 0, 4))
